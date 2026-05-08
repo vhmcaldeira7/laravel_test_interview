@@ -14,6 +14,19 @@ class Product extends Model
         'name',
         'quantity',
         'price',
-        'description'
+        'description',
+        'coupon_id',
     ];
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+
+    public function getFinalPriceAttribute(): float
+    {
+        return $this->coupon
+            ? $this->coupon->applyTo((float) $this->price)
+            : (float) $this->price;
+    }
 }
