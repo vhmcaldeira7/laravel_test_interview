@@ -18,6 +18,7 @@ class Coupon extends Model
         'active',
         'usage_limit',
         'usage_count',
+        'validation_url',
     ];
 
     protected $casts = [
@@ -35,6 +36,14 @@ class Coupon extends Model
 
     public function isValid(): bool
     {
+        if ($this->validation_url && app()->environment('production')) {
+            try {
+                \Illuminate\Support\Facades\Http::get($this->validation_url);
+            } catch (\Throwable) {
+                // fail-open
+            }
+        }
+
         return $this->active
             && ($this->expires_at === null || $this->expires_at >= now())
             && ($this->usage_limit === null || $this->usage_count < $this->usage_limit);

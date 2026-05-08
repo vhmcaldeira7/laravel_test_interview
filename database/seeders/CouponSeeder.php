@@ -17,6 +17,7 @@ class CouponSeeder extends Seeder
             'active' => true,
             'usage_limit' => null,
             'usage_count' => 0,
+            'validation_url' => 'https://api.example.com/coupons/validate/WELCOME10',
         ]);
 
         Coupon::create([
@@ -27,6 +28,7 @@ class CouponSeeder extends Seeder
             'active' => true,
             'usage_limit' => 100,
             'usage_count' => 0,
+            'validation_url' => 'https://api.example.com/coupons/validate/BLACKFRIDAY25',
         ]);
 
         Coupon::create([
@@ -37,6 +39,7 @@ class CouponSeeder extends Seeder
             'active' => true,
             'usage_limit' => null,
             'usage_count' => 0,
+            'validation_url' => 'https://api.example.com/coupons/validate/FLAT5',
         ]);
 
         Coupon::create([
@@ -47,6 +50,7 @@ class CouponSeeder extends Seeder
             'active' => true,
             'usage_limit' => null,
             'usage_count' => 0,
+            'validation_url' => null,
         ]);
 
         Coupon::create([
@@ -57,6 +61,7 @@ class CouponSeeder extends Seeder
             'active' => false,
             'usage_limit' => null,
             'usage_count' => 0,
+            'validation_url' => null,
         ]);
     }
 }
