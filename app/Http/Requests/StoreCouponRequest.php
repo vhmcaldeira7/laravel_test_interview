@@ -16,7 +16,7 @@ class StoreCouponRequest extends FormRequest
         return [
             'code' => 'required|string|max:50|unique:coupons,code',
             'type' => 'required|in:percentual,fixo',
-            'value' => ['required', 'numeric', 'min:0.01', function ($attribute, $value, $fail) {
+            'value' => ['required', 'numeric', function ($attribute, $value, $fail) {
                 if ($this->input('type') === 'percentual' && $value > 100) {
                     $fail('The value must be less than or equal to 100 for percentual.');
                 }
