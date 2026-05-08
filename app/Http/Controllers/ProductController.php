@@ -2,8 +2,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Coupon;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Requests\ApplyCouponRequest;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
@@ -74,5 +76,39 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')
                 ->withSuccess('Product is deleted successfully.');
+    }
+
+    /**
+     * Apply a coupon to the specified product.
+     */
+    public function applyCoupon(ApplyCouponRequest $request, Product $product) : RedirectResponse
+    {
+        if ($product->coupon_id) {
+            return redirect()->back()->with('error', 'Product already has a coupon applied.');
+        }
+
+        $coupon = Coupon::where('code', $request->validated('coupon_code'))->first();
+
+        if (! $coupon || ! $coupon->isValid()) {
+            return redirect()->back()->with('error', 'Cupom inválido');
+        }
+
+        $product->update(['coupon_id' => $coupon->id]);
+        $coupon->increment('usage_count');
+
+        return redirect()->back()->withSuccess('Coupon applied successfully.');
+    }
+
+    /**
+     * Remove the applied coupon from the specified product.
+     */
+    public function removeCoupon(Product $product) : RedirectResponse
+    {
+        if ($product->coupon) {
+            $product->coupon->decrement('usage_count');
+        }
+        $product->update(['coupon_id' => null]);
+
+        return redirect()->back()->withSuccess('Coupon removed successfully.');
     }
 }
